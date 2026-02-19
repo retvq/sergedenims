@@ -84,11 +84,14 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
-  // Update conversation's updated_at
-  await supabase
-    .from("conversations")
-    .update({ updated_at: new Date().toISOString() })
-    .eq("id", conversation_id);
+  // Only bump conversation's updated_at for user messages
+  // so admin replies don't make the conversation appear "new" to admin
+  if (sender_role === "user") {
+    await supabase
+      .from("conversations")
+      .update({ updated_at: new Date().toISOString() })
+      .eq("id", conversation_id);
+  }
 
   return NextResponse.json(data);
 }

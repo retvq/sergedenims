@@ -25,6 +25,7 @@ export default function AdminThread({ conversation, onBack }: AdminThreadProps) 
       const data = await res.json();
       setMessages(data);
     }
+    markConversationRead(conversation.id);
     setLoading(false);
   };
 
@@ -44,12 +45,16 @@ export default function AdminThread({ conversation, onBack }: AdminThreadProps) 
           filter: `conversation_id=eq.${conversation.id}`,
         },
         (payload) => {
+          const newMsg = payload.new as Message;
           setMessages((prev) => {
-            const exists = prev.some((m) => m.id === (payload.new as Message).id);
+            const exists = prev.some((m) => m.id === newMsg.id);
             if (exists) return prev;
-            return [...prev, payload.new as Message];
+            return [...prev, newMsg];
           });
-          markConversationRead(conversation.id);
+          // Only update read timestamp for customer messages
+          if (newMsg.sender_role === "user") {
+            markConversationRead(conversation.id);
+          }
         }
       )
       .subscribe();
