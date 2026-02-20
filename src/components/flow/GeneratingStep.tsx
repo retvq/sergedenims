@@ -53,7 +53,7 @@ export default function GeneratingStep({
   return (
     <div className="max-w-lg mx-auto text-center py-12">
       <div className="mb-8">
-        <div className="w-20 h-20 mx-auto border-4 border-sdn-teal border-t-transparent animate-spin mb-6" />
+        <span className="inline-block text-6xl text-sdn-teal animate-spin mb-6">&#10057;</span>
         <h2 className="text-2xl font-bold tracking-wide text-sdn-black uppercase mb-2">
           Generating Your Design
         </h2>

@@ -42,7 +42,7 @@ export default function DetectingStep({ sessionId, imageUrl, onDetected, onError
       </div>
 
       <div className="flex items-center justify-center gap-3 mb-4">
-        <div className="w-5 h-5 border-2 border-sdn-teal border-t-transparent animate-spin" />
+        <span className="inline-block text-xl text-sdn-teal animate-spin">&#10057;</span>
         <span className="text-lg font-semibold text-sdn-black tracking-wide">
           Analyzing your garment...
         </span>

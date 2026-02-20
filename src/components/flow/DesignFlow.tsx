@@ -28,7 +28,11 @@ const INITIAL_STATE: FlowState = {
   price: null,
 };
 
-export default function DesignFlow() {
+interface DesignFlowProps {
+  onClose?: () => void;
+}
+
+export default function DesignFlow({ onClose }: DesignFlowProps) {
   const [state, setState] = useState<FlowState>(INITIAL_STATE);
   const [error, setError] = useState<string | null>(null);
 
@@ -155,7 +159,7 @@ export default function DesignFlow() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Header currentStep={state.step} reachableSteps={reachableSteps} onStepClick={handleStepClick} />
+      <Header currentStep={state.step} reachableSteps={reachableSteps} onStepClick={handleStepClick} onClose={onClose} />
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
         {error && (
           <div className="mb-6 p-4 bg-sdn-red/10 border border-sdn-red/30 text-sdn-red text-sm">
