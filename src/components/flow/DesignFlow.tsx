@@ -37,12 +37,24 @@ export default function DesignFlow({ onClose }: DesignFlowProps) {
   const [error, setError] = useState<string | null>(null);
 
   // Recover session from localStorage on mount
+  // Sanitize transient steps that auto-fire API calls so they don't re-trigger
   useEffect(() => {
     const saved = localStorage.getItem("sdn_session");
     if (saved) {
       try {
         const parsed = JSON.parse(saved) as FlowState;
-        if (parsed.sessionId) setState(parsed);
+        if (!parsed.sessionId) return;
+
+        // "detecting" and "generating" auto-fire on mount — fall back to a safe step
+        if (parsed.step === "detecting") {
+          // If detection already completed, go to samples; otherwise restart upload
+          parsed.step = parsed.detectedCategory ? "samples" : "upload";
+        } else if (parsed.step === "generating") {
+          // If a design already exists, show it; otherwise go back to style selection
+          parsed.step = parsed.currentDesignUrl ? "result" : "samples";
+        }
+
+        setState(parsed);
       } catch {}
     }
   }, []);
