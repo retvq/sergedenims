@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 
-const INR_RATE = 83;
+const INR_RATE = 90.97;
 const AED_RATE = 3.67;
 
 type Scale = "single_1" | "single_5" | "hundred_1" | "hundred_5" | "thousand_1" | "thousand_5";
@@ -86,7 +86,7 @@ export default function CostPage() {
 
         {/* Exchange rates */}
         <div className="inline-flex gap-4 bg-white border border-stone-200 px-4 py-2 rounded-md text-xs text-stone-500 mb-8">
-          <span>USD → INR: <strong className="text-stone-900">₹83</strong></span>
+          <span>USD → INR: <strong className="text-stone-900">₹90.97</strong></span>
           <span>USD → AED: <strong className="text-stone-900">3.67</strong></span>
         </div>
 
