@@ -87,17 +87,18 @@ export default function DesignFlow() {
   };
 
   const handleSampleSelected = (sampleKey: StyleKey) => {
-    update({ pathType: "sample", selectedSampleKey: sampleKey, step: "generating" });
+    update({ pathType: "sample", selectedSampleKey: sampleKey, regenerationFeedback: null, step: "generating" });
   };
 
   const handleGoCustom = () => {
-    update({ pathType: "custom", step: "custom" });
+    update({ pathType: "custom", regenerationFeedback: null, step: "custom" });
   };
 
   const handleCustomSubmit = (instructions: string, referenceUrl?: string) => {
     update({
       customInstructions: instructions,
       customReferenceUrl: referenceUrl || null,
+      regenerationFeedback: null,
       step: "generating",
     });
   };
