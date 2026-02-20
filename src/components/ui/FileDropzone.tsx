@@ -2,7 +2,7 @@
 
 import { useDropzone } from "react-dropzone";
 import { useCallback } from "react";
-import { MAX_FILE_SIZE } from "@/lib/constants";
+import { MAX_FILE_SIZE, ACCEPTED_IMAGE_TYPES } from "@/lib/constants";
 
 interface FileDropzoneProps {
   onFileSelect: (file: File) => void;
@@ -22,32 +22,24 @@ export default function FileDropzone({ onFileSelect, selectedFile, onClear }: Fi
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    accept: ACCEPTED_IMAGE_TYPES,
     maxSize: MAX_FILE_SIZE,
     multiple: false,
   });
 
   if (selectedFile) {
-    const isImage = selectedFile.type.startsWith("image/");
     return (
       <div className="border border-sdn-gray-border p-4 bg-sdn-gray">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            {isImage ? (
-              <div className="w-12 h-12 bg-white border border-sdn-gray-border flex items-center justify-center overflow-hidden">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={URL.createObjectURL(selectedFile)}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            ) : (
-              <div className="w-12 h-12 bg-white border border-sdn-gray-border flex items-center justify-center">
-                <svg className="w-6 h-6 text-sdn-black/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                </svg>
-              </div>
-            )}
+            <div className="w-12 h-12 bg-white border border-sdn-gray-border flex items-center justify-center overflow-hidden">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={URL.createObjectURL(selectedFile)}
+                alt="Preview"
+                className="w-full h-full object-cover"
+              />
+            </div>
             <div>
               <p className="text-sm font-medium text-sdn-black truncate max-w-[200px]">
                 {selectedFile.name}
@@ -92,10 +84,10 @@ export default function FileDropzone({ onFileSelect, selectedFile, onClear }: Fi
         />
       </svg>
       <p className="text-sm text-sdn-black/60">
-        {isDragActive ? "Drop your file here" : "Drag & drop your design reference here"}
+        {isDragActive ? "Drop your image here" : "Drag & drop your image here"}
       </p>
       <p className="text-xs text-sdn-black/40 mt-1">
-        or click to browse (PNG, JPG, PDF, up to 10MB)
+        or click to browse (PNG, JPG, WEBP, up to 10MB)
       </p>
     </div>
   );

@@ -5,7 +5,6 @@ export async function POST(request: NextRequest) {
   const supabase = await createClient();
   const formData = await request.formData();
   const file = formData.get("file") as File | null;
-  const conversationId = formData.get("conversation_id") as string;
 
   if (!file) {
     return NextResponse.json({ error: "No file provided" }, { status: 400 });
@@ -15,11 +14,12 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "File too large (max 10MB)" }, { status: 400 });
   }
 
+  // Upload to design-assets bucket
   const fileExt = file.name.split(".").pop();
-  const uniqueName = `${conversationId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
+  const uniqueName = `clothing/${Date.now()}-${Math.random().toString(36).slice(2)}.${fileExt}`;
 
   const { error: uploadError } = await supabase.storage
-    .from("design-uploads")
+    .from("design-assets")
     .upload(uniqueName, file);
 
   if (uploadError) {
@@ -27,12 +27,24 @@ export async function POST(request: NextRequest) {
   }
 
   const { data: urlData } = supabase.storage
-    .from("design-uploads")
+    .from("design-assets")
     .getPublicUrl(uniqueName);
 
+  const clothingImageUrl = urlData.publicUrl;
+
+  // Create design session
+  const { data: session, error: sessionError } = await supabase
+    .from("design_sessions")
+    .insert({ clothing_image_url: clothingImageUrl, status: "uploading" })
+    .select()
+    .single();
+
+  if (sessionError) {
+    return NextResponse.json({ error: sessionError.message }, { status: 500 });
+  }
+
   return NextResponse.json({
-    file_url: urlData.publicUrl,
-    file_name: file.name,
-    file_type: file.type,
+    sessionId: session.id,
+    clothingImageUrl,
   });
 }
